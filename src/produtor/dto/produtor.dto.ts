@@ -15,4 +15,7 @@ export class ProdutorDto {
 
     @IsNumber()
     estado_id: number
+
+    @IsNumber()
+    cidade_id: number
 }

@@ -46,12 +46,28 @@ const safras = [
     { safra_id: 4, safra_ano: 2025 },
 ]
 
+const cidades = [
+  { cidade_id: 3509502, cidade_nome: 'Jundiaí', estado_id: 35 },
+  { cidade_id: 3550308, cidade_nome: 'Sorocaba', estado_id: 35 },
+  { cidade_id: 4106902, cidade_nome: 'Maringá', estado_id: 41 },
+  { cidade_id: 4125506, cidade_nome: 'Toledo', estado_id: 41 },
+  { cidade_id: 3118601, cidade_nome: 'Juiz de Fora', estado_id: 31 },
+  { cidade_id: 3137007, cidade_nome: 'Uberlândia', estado_id: 31 },
+];
+
 async function main() {
     for (const estado of estados) {
         await prisma.estado.upsert({
             where: { estado_id: estado.estado_id },
             update: {},
             create: estado,
+        });
+    }
+    for (const cidade of cidades) {
+        await prisma.cidade.upsert({
+            where: { cidade_id: cidade.cidade_id },
+            update: {},
+            create: cidade,
         });
     }
     for (const cultura of culturas) {

@@ -24,10 +24,24 @@ model Estado {
   estado_nome  String
   estado_sigla String
 
+  cidades    Cidade[]
   produtores Produtor[]
   fazendas   Fazenda[]
 
   @@map("estado")
+}
+
+model Cidade {
+  cidade_id   Int    @id
+  cidade_nome String
+  estado_id   Int
+
+  estado Estado @relation(fields: [estado_id], references: [estado_id])
+
+  produtores Produtor[]
+  fazendas   Fazenda[]
+
+  @@map("cidade")
 }
 
 model Cultura {
@@ -52,6 +66,8 @@ model Produtor {
   produtor_cpf  String?
   produtor_cnpj String?
   estado_id     Int
+  cidade_id     Int
+  cidade        Cidade    @relation(fields: [cidade_id], references: [cidade_id])
   estado        Estado    @relation(fields: [estado_id], references: [estado_id])
   fazendas      Fazenda[]
 
@@ -62,12 +78,14 @@ model Fazenda {
   fazenda_id          Int                   @id @default(autoincrement())
   produtor_id         Int
   estado_id           Int
+  cidade_id           Int
   fazenda_descricao   String
   fazenda_area_total  Decimal               @db.Decimal(10, 2)
   fazenda_area_agr    Decimal               @db.Decimal(10, 2)
   fazenda_area_veg    Decimal               @db.Decimal(10, 2)
   produtor            Produtor              @relation(fields: [produtor_id], references: [produtor_id])
   estado              Estado                @relation(fields: [estado_id], references: [estado_id])
+  cidade              Cidade                @relation(fields: [cidade_id], references: [cidade_id])
   FazendaCulturaSafra FazendaCulturaSafra[]
 
   @@map("fazenda")

@@ -5,6 +5,7 @@ import { HttpCode, HttpStatus, INestApplication, ValidationPipe } from '@nestjs/
 import { PrismaService } from '../src/prisma/prisma.service';
 import { AuthDto } from 'src/auth/dto';
 import { inspect } from 'util';
+import { ProdutorDto } from 'src/produtor/dto/produtor.dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -72,7 +73,24 @@ describe('App e2e', () => {
   });
   describe('Safra', () => {
     it('Valida Safra', () => {
-      return pactum.spec().get('/Safra').withBearerToken('$S{usuarioToken}')
+      return pactum.spec().get('/safra').withBearerToken('$S{usuarioToken}')
+    });
+  });
+  describe('Produtor', () => {
+    const dto: ProdutorDto = {
+      produtor_nome: "Teste",
+      produtor_cpf: "57422626046",
+      produtor_cnpj: "51918501000192",
+      estado_id: 31,
+      cidade_id: 3137007
+    }
+
+    it('Insere Produtor', () => {
+      return pactum.spec()
+        .post('/produtor/novo')
+        .withBearerToken('$S{usuarioToken}')
+        .withBody(dto)
+        .expectStatus(HttpStatus.CREATED)
     });
   });
 
