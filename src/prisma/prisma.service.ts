@@ -13,4 +13,13 @@ export class PrismaService extends PrismaClient {
       },
     });
   }
+
+  limparDados() {
+    return this.$transaction([
+      this.fazendaCulturaSafra.deleteMany(),
+      this.fazenda.deleteMany(),
+      this.produtor.deleteMany(),
+      this.usuario.deleteMany()
+    ])
+  }
 }
