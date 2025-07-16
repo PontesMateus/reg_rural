@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  usuario_id           Int      @id @default(autoincrement())
+  usuario_data_criacao DateTime @default(now())
+
+  email String @unique
+  hash  String
+
+  usuario_nome String?
+
+  @@map("usuarios")
+}
+
+model Estado {
+  estado_id    Int    @id
+  estado_nome  String
+  estado_sigla String
+
+  produtores Produtor[]
+  fazendas   Fazenda[]
+
+  @@map("estado")
+}
+
+model Cultura {
+  cultura_id          Int                   @id @default(autoincrement())
+  cultura_descricao   String
+  FazendaCulturaSafra FazendaCulturaSafra[]
+
+  @@map("cultura")
+}
+
+model Safra {
+  safra_id            Int                   @id @default(autoincrement())
+  safra_ano           Int
+  FazendaCulturaSafra FazendaCulturaSafra[]
+
+  @@map("safra")
+}
+
+model Produtor {
+  produtor_id   Int       @id @default(autoincrement())
+  produtor_nome String
+  produtor_cpf  String?
+  produtor_cnpj String?
+  estado_id     Int
+  estado        Estado    @relation(fields: [estado_id], references: [estado_id])
+  fazendas      Fazenda[]
+
+  @@map("produtor")
+}
+
+model Fazenda {
+  fazenda_id          Int                   @id @default(autoincrement())
+  produtor_id         Int
+  estado_id           Int
+  fazenda_descricao   String
+  fazenda_area_total  Decimal               @db.Decimal(10, 2)
+  fazenda_area_agr    Decimal               @db.Decimal(10, 2)
+  fazenda_area_veg    Decimal               @db.Decimal(10, 2)
+  produtor            Produtor              @relation(fields: [produtor_id], references: [produtor_id])
+  estado              Estado                @relation(fields: [estado_id], references: [estado_id])
+  FazendaCulturaSafra FazendaCulturaSafra[]
+
+  @@map("fazenda")
+}
+
+model FazendaCulturaSafra {
+  fazenda_id Int
+  cultura_id Int
+  safra_id   Int
+
+  fazenda Fazenda @relation(fields: [fazenda_id], references: [fazenda_id])
+  cultura Cultura @relation(fields: [cultura_id], references: [cultura_id])
+  safra   Safra   @relation(fields: [safra_id], references: [safra_id])
+
+  @@id([fazenda_id, cultura_id, safra_id])
+  @@map("fazenda_cultura_safra")
+}
