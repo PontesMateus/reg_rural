@@ -20,7 +20,7 @@ model Usuario {
 }
 
 model Estado {
-  estado_id    Int    @id
+  estado_id    Int @id
   estado_nome  String
   estado_sigla String
 
@@ -32,7 +32,7 @@ model Estado {
 }
 
 model Cidade {
-  cidade_id   Int    @id
+  cidade_id   Int @id
   cidade_nome String
   estado_id   Int
 
@@ -45,7 +45,7 @@ model Cidade {
 }
 
 model Cultura {
-  cultura_id          Int                   @id @default(autoincrement())
+  cultura_id          Int                @id @default(autoincrement())
   cultura_descricao   String
   FazendaCulturaSafra FazendaCulturaSafra[]
 
@@ -53,7 +53,7 @@ model Cultura {
 }
 
 model Safra {
-  safra_id            Int                   @id @default(autoincrement())
+  safra_id            Int                @id @default(autoincrement())
   safra_ano           Int
   FazendaCulturaSafra FazendaCulturaSafra[]
 
@@ -61,7 +61,7 @@ model Safra {
 }
 
 model Produtor {
-  produtor_id   Int       @id @default(autoincrement())
+  produtor_id   Int    @id @default(autoincrement())
   produtor_nome String
   produtor_cpf  String?
   produtor_cnpj String?
@@ -75,7 +75,7 @@ model Produtor {
 }
 
 model Fazenda {
-  fazenda_id          Int                   @id @default(autoincrement())
+  fazenda_id          Int                @id @default(autoincrement())
   produtor_id         Int
   estado_id           Int
   cidade_id           Int
@@ -100,6 +100,6 @@ model FazendaCulturaSafra {
   cultura Cultura @relation(fields: [cultura_id], references: [cultura_id])
   safra   Safra   @relation(fields: [safra_id], references: [safra_id])
 
-  @@id([fazenda_id, cultura_id, safra_id])
+  @@id([fazenda_id, cultura_id, safra_id]) // ou @@unique se já existir outro ID primário
   @@map("fazenda_cultura_safra")
 }

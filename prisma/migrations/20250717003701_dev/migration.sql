@@ -19,6 +19,15 @@ CREATE TABLE "estado" (
 );
 
 -- CreateTable
+CREATE TABLE "cidade" (
+    "cidade_id" INTEGER NOT NULL,
+    "cidade_nome" TEXT NOT NULL,
+    "estado_id" INTEGER NOT NULL,
+
+    CONSTRAINT "cidade_pkey" PRIMARY KEY ("cidade_id")
+);
+
+-- CreateTable
 CREATE TABLE "cultura" (
     "cultura_id" SERIAL NOT NULL,
     "cultura_descricao" TEXT NOT NULL,
@@ -41,6 +50,7 @@ CREATE TABLE "produtor" (
     "produtor_cpf" TEXT,
     "produtor_cnpj" TEXT,
     "estado_id" INTEGER NOT NULL,
+    "cidade_id" INTEGER NOT NULL,
 
     CONSTRAINT "produtor_pkey" PRIMARY KEY ("produtor_id")
 );
@@ -50,6 +60,7 @@ CREATE TABLE "fazenda" (
     "fazenda_id" SERIAL NOT NULL,
     "produtor_id" INTEGER NOT NULL,
     "estado_id" INTEGER NOT NULL,
+    "cidade_id" INTEGER NOT NULL,
     "fazenda_descricao" TEXT NOT NULL,
     "fazenda_area_total" DECIMAL(10,2) NOT NULL,
     "fazenda_area_agr" DECIMAL(10,2) NOT NULL,
@@ -71,6 +82,12 @@ CREATE TABLE "fazenda_cultura_safra" (
 CREATE UNIQUE INDEX "usuarios_email_key" ON "usuarios"("email");
 
 -- AddForeignKey
+ALTER TABLE "cidade" ADD CONSTRAINT "cidade_estado_id_fkey" FOREIGN KEY ("estado_id") REFERENCES "estado"("estado_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "produtor" ADD CONSTRAINT "produtor_cidade_id_fkey" FOREIGN KEY ("cidade_id") REFERENCES "cidade"("cidade_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "produtor" ADD CONSTRAINT "produtor_estado_id_fkey" FOREIGN KEY ("estado_id") REFERENCES "estado"("estado_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -78,6 +95,9 @@ ALTER TABLE "fazenda" ADD CONSTRAINT "fazenda_produtor_id_fkey" FOREIGN KEY ("pr
 
 -- AddForeignKey
 ALTER TABLE "fazenda" ADD CONSTRAINT "fazenda_estado_id_fkey" FOREIGN KEY ("estado_id") REFERENCES "estado"("estado_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fazenda" ADD CONSTRAINT "fazenda_cidade_id_fkey" FOREIGN KEY ("cidade_id") REFERENCES "cidade"("cidade_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "fazenda_cultura_safra" ADD CONSTRAINT "fazenda_cultura_safra_fazenda_id_fkey" FOREIGN KEY ("fazenda_id") REFERENCES "fazenda"("fazenda_id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -47,13 +47,85 @@ const safras = [
 ]
 
 const cidades = [
-  { cidade_id: 3509502, cidade_nome: 'Jundiaí', estado_id: 35 },
-  { cidade_id: 3550308, cidade_nome: 'Sorocaba', estado_id: 35 },
-  { cidade_id: 4106902, cidade_nome: 'Maringá', estado_id: 41 },
-  { cidade_id: 4125506, cidade_nome: 'Toledo', estado_id: 41 },
-  { cidade_id: 3118601, cidade_nome: 'Juiz de Fora', estado_id: 31 },
-  { cidade_id: 3137007, cidade_nome: 'Uberlândia', estado_id: 31 },
+    { cidade_id: 3509502, cidade_nome: 'Jundiaí', estado_id: 35 },
+    { cidade_id: 3550308, cidade_nome: 'Sorocaba', estado_id: 35 },
+    { cidade_id: 4106902, cidade_nome: 'Maringá', estado_id: 41 },
+    { cidade_id: 4125506, cidade_nome: 'Toledo', estado_id: 41 },
+    { cidade_id: 3118601, cidade_nome: 'Juiz de Fora', estado_id: 31 },
+    { cidade_id: 3137007, cidade_nome: 'Uberlândia', estado_id: 31 },
 ];
+
+const produtores = [
+    { produtor_id: 1, produtor_nome: 'Luiz Augusto Monteiro', produtor_cpf: '65295006697', estado_id: 31, cidade_id: 3118601 },
+    { produtor_id: 2, produtor_nome: 'Silvana Luna Flávia Oliveira', produtor_cpf: '33361289602', estado_id: 41, cidade_id: 4125506 },
+]
+
+const fazendas = [
+    {
+        fazenda_id: 1,
+        produtor_id: 1,
+        estado_id: 31,
+        cidade_id: 3118601,
+        fazenda_descricao: 'Luiz Fazenda 1',
+        fazenda_area_total: 100,
+        fazenda_area_agr: 60,
+        fazenda_area_veg: 40
+    },
+    {
+        fazenda_id: 2,
+        produtor_id: 1,
+        estado_id: 31,
+        cidade_id: 3137007,
+        fazenda_descricao: 'Luiz Fazenda 2',
+        fazenda_area_total: 140,
+        fazenda_area_agr: 70,
+        fazenda_area_veg: 60
+    },
+    {
+        fazenda_id: 3,
+        produtor_id: 1,
+        estado_id: 31,
+        cidade_id: 3137007,
+        fazenda_descricao: 'Luiz Fazenda 3',
+        fazenda_area_total: 140,
+        fazenda_area_agr: 70,
+        fazenda_area_veg: 60
+    },
+    {
+        fazenda_id: 4,
+        produtor_id: 1,
+        estado_id: 41,
+        cidade_id: 4125506,
+        fazenda_descricao: 'Silvana Fazenda 1',
+        fazenda_area_total: 500,
+        fazenda_area_agr: 350,
+        fazenda_area_veg: 80
+    },
+    {
+        fazenda_id: 5,
+        produtor_id: 1,
+        estado_id: 41,
+        cidade_id: 4106902,
+        fazenda_descricao: 'Silvana Fazenda 3',
+        fazenda_area_total: 800,
+        fazenda_area_agr: 600,
+        fazenda_area_veg: 170
+    },
+]
+
+const culturaFazendaSafras = [
+    { fazenda_id: 2, cultura_id: 1, safra_id: 1 },
+    { fazenda_id: 1, cultura_id: 3, safra_id: 2 },
+    { fazenda_id: 3, cultura_id: 4, safra_id: 3 },
+    { fazenda_id: 1, cultura_id: 3, safra_id: 4 },
+    { fazenda_id: 4, cultura_id: 2, safra_id: 3 },
+    { fazenda_id: 1, cultura_id: 2, safra_id: 4 },
+    { fazenda_id: 4, cultura_id: 2, safra_id: 3 },
+    { fazenda_id: 5, cultura_id: 4, safra_id: 1 },
+]
+
+
+
 
 async function main() {
     for (const estado of estados) {
@@ -82,6 +154,33 @@ async function main() {
             where: { safra_id: safra.safra_id },
             update: {},
             create: safra,
+        })
+    }
+    for (const produtor of produtores) {
+        await prisma.produtor.upsert({
+            where: { produtor_id: produtor.produtor_id },
+            update: {},
+            create: produtor,
+        })
+    }
+    for (const fazenda of fazendas) {
+        await prisma.fazenda.upsert({
+            where: { fazenda_id: fazenda.fazenda_id },
+            update: {},
+            create: fazenda,
+        })
+    }
+    for (const culturaFazendaSafra of culturaFazendaSafras) {
+        await prisma.fazendaCulturaSafra.upsert({
+            where: {
+                fazenda_id_cultura_id_safra_id: {
+                    fazenda_id: culturaFazendaSafra.fazenda_id,
+                    cultura_id: culturaFazendaSafra.cultura_id,
+                    safra_id: culturaFazendaSafra.safra_id,
+                },
+            },
+            update: {},
+            create: culturaFazendaSafra,
         })
     }
 }

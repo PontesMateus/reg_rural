@@ -6,7 +6,7 @@ import { EditProdutorDto } from './dto';
 @Controller('produtor')
 export class ProdutorController {
     constructor(private produtorService: ProdutorService) { }
-    @Post('novo')
+    @Post()
     async novoProdutor(@Body() dto: ProdutorDto) {
         return await this.produtorService.novoProdutor(dto);
     }
@@ -16,21 +16,21 @@ export class ProdutorController {
         return await this.produtorService.listProdutor();
     }
 
-    @Patch('atualiza/:produtor_id')
+    @Patch(':produtor_id')
     async atualizaProdutor(@Param('produtor_id') produtorId: string, @Body() dto: EditProdutorDto) {
         const id = parseInt(produtorId, 10);
         const data = await this.produtorService.atualizaProdutor(id, dto);
         return data;
     }
 
-    @Delete('delete/:produtor_id')
+    @Delete(':produtor_id')
     async delete(@Param('produtor_id') produtorId: string) {
         const id = parseInt(produtorId, 10);
         const deleted = await this.produtorService.deleteProdutor(id);
         if (!deleted) {
-            throw new NotFoundException('Produtor não encontrado');
+            throw new NotFoundException('Registro não encontrado');
         }
-        return { message: 'Produtor deletado com sucesso' };
+        return { message: 'Registro deletado com sucesso' };
     }
 
 }
