@@ -17,23 +17,23 @@ npm install
 yarn install
 ``` 
 ## 2. Configurar variáveis de ambiente
-```
+```bash
 cp .env.example .env
 ```
 ## 3. Subir o banco de dados com Docker (opcional)
-```
+```bash
 npm run db:dev:restart
 # ou
 yarn db:dev:restart
 ```
 ## 4. Iniciar a aplicação
-```
+```bash
 npm run start:dev
 # ou
 yarn start:dev
 ```
 ## 5. Rodar os testes
-```
+```bash
 npm run test:e2e
 # ou
 yarn test:e2e
