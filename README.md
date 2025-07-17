@@ -20,23 +20,19 @@ yarn install
 ```bash
 cp .env.example .env
 ```
-## 3. Subir o banco de dados com Docker (opcional)
+## 3. Subir o banco de dados com Docker e popular banco de dados (opcional)
 ```bash
 npm run db:dev:restart
 # ou
 yarn db:dev:restart
 ```
-## 4. Popular o banco com dados (opcional)
-```bash
-npx prisma db seed
-```
-## 5. Iniciar a aplicação
+## 4. Iniciar a aplicação
 ```bash
 npm run start:dev
 # ou
 yarn start:dev
 ```
-## 6. Rodar os testes
+## 5. Rodar os testes
 ```bash
 npm run test:e2e
 # ou
