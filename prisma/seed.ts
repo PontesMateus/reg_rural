@@ -59,55 +59,6 @@ const produtores = [
     { produtor_nome: 'Luiz Augusto Monteiro', produtor_cpf: '65295006697', estado_id: 31, cidade_id: 3118601 },
     { produtor_nome: 'Silvana Luna Flávia Oliveira', produtor_cpf: '33361289602', estado_id: 41, cidade_id: 4125506 },
 ]
-
-const fazendas = [
-    {
-        produtor_id: 1,
-        estado_id: 31,
-        cidade_id: 3118601,
-        fazenda_descricao: 'Luiz Fazenda 1',
-        fazenda_area_total: 100,
-        fazenda_area_agr: 60,
-        fazenda_area_veg: 40
-    },
-    {
-        produtor_id: 1,
-        estado_id: 31,
-        cidade_id: 3137007,
-        fazenda_descricao: 'Luiz Fazenda 2',
-        fazenda_area_total: 140,
-        fazenda_area_agr: 70,
-        fazenda_area_veg: 60
-    },
-    {
-        produtor_id: 1,
-        estado_id: 31,
-        cidade_id: 3137007,
-        fazenda_descricao: 'Luiz Fazenda 3',
-        fazenda_area_total: 140,
-        fazenda_area_agr: 70,
-        fazenda_area_veg: 60
-    },
-    {
-        produtor_id: 1,
-        estado_id: 41,
-        cidade_id: 4125506,
-        fazenda_descricao: 'Silvana Fazenda 1',
-        fazenda_area_total: 500,
-        fazenda_area_agr: 350,
-        fazenda_area_veg: 80
-    },
-    {
-        produtor_id: 1,
-        estado_id: 41,
-        cidade_id: 4106902,
-        fazenda_descricao: 'Silvana Fazenda 3',
-        fazenda_area_total: 800,
-        fazenda_area_agr: 600,
-        fazenda_area_veg: 170
-    },
-]
-
 const culturaFazendaSafras = [
     { fazenda_id: 2, cultura_id: 1, safra_id: 1 },
     { fazenda_id: 1, cultura_id: 3, safra_id: 2 },
@@ -143,6 +94,65 @@ async function main() {
         data: [...produtores],
         skipDuplicates: true,
     })
+
+    const produtoresDB = await prisma.produtor.findMany({
+        where: {
+            produtor_cpf: {
+                in: produtores.map((p) => p.produtor_cpf),
+            },
+        },
+    });
+
+
+
+    const fazendas = [
+        {
+            produtor_id: produtoresDB.find(p => p.produtor_cpf === '65295006697')!.produtor_id,
+            estado_id: 31,
+            cidade_id: 3118601,
+            fazenda_descricao: 'Luiz Fazenda 1',
+            fazenda_area_total: 100,
+            fazenda_area_agr: 60,
+            fazenda_area_veg: 40
+        },
+        {
+            produtor_id: produtoresDB.find(p => p.produtor_cpf === '65295006697')!.produtor_id,
+            estado_id: 31,
+            cidade_id: 3137007,
+            fazenda_descricao: 'Luiz Fazenda 2',
+            fazenda_area_total: 140,
+            fazenda_area_agr: 70,
+            fazenda_area_veg: 60
+        },
+        {
+            produtor_id: produtoresDB.find(p => p.produtor_cpf === '65295006697')!.produtor_id,
+            estado_id: 31,
+            cidade_id: 3137007,
+            fazenda_descricao: 'Luiz Fazenda 3',
+            fazenda_area_total: 140,
+            fazenda_area_agr: 70,
+            fazenda_area_veg: 60
+        },
+        {
+            produtor_id: produtoresDB.find(p => p.produtor_cpf === '33361289602')!.produtor_id,
+            estado_id: 41,
+            cidade_id: 4125506,
+            fazenda_descricao: 'Silvana Fazenda 1',
+            fazenda_area_total: 500,
+            fazenda_area_agr: 350,
+            fazenda_area_veg: 80
+        },
+        {
+            produtor_id: produtoresDB.find(p => p.produtor_cpf === '33361289602')!.produtor_id,
+            estado_id: 41,
+            cidade_id: 4106902,
+            fazenda_descricao: 'Silvana Fazenda 3',
+            fazenda_area_total: 800,
+            fazenda_area_agr: 600,
+            fazenda_area_veg: 170
+        },
+    ]
+
     await prisma.fazenda.createMany({
         data: [...fazendas],
         skipDuplicates: true,

@@ -18,7 +18,7 @@ export class FazendaController {
         return await this.fazendaService.listFazenda();
     }
 
-    @Get('produtor/:fazenda_id')
+    @Get('produtor/:produtor_id')
     async listFazendaPorProdutor(@Param('produtor_id') produtorId: string) {
         const id = parseInt(produtorId, 10);
         return await this.fazendaService.listFazendaPorProdutor(id);
@@ -26,6 +26,11 @@ export class FazendaController {
     @Get('resumo')
     async getResumoFazendas() {
         return this.fazendaService.getResumoFazendas();
+    }
+
+    @Get('por-estado')
+    getFazendasPorEstado() {
+        return this.fazendaService.getFazendasPorEstado();
     }
 
     @Patch(':fazenda_id')
@@ -43,10 +48,5 @@ export class FazendaController {
             throw new NotFoundException('Registro não encontrado');
         }
         return { message: 'Registro deletado com sucesso' };
-    }
-
-    @Get('por-estado')
-    getFazendasPorEstado() {
-        return this.fazendaService.getFazendasPorEstado();
     }
 }
