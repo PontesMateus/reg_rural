@@ -113,4 +113,38 @@ export class FazendaService {
             soma_area_veg: Number(somaAreaTotalObj._sum.fazenda_area_veg ?? 0),
         };
     }
+
+    async getFazendasPorEstado() {
+        const resultados = await this.prisma.fazenda.groupBy({
+            by: ['estado_id'],
+            _count: {
+                fazenda_id: true,
+            },
+            _sum: {
+                fazenda_area_total: true,
+                fazenda_area_agr: true,
+                fazenda_area_veg: true,
+            },
+        });
+
+        const estados = await this.prisma.estado.findMany({
+            where: {
+                estado_id: {
+                    in: resultados.map((r) => r.estado_id),
+                },
+            },
+        });
+
+        return resultados.map((r) => {
+            const estado = estados.find((e) => e.estado_id === r.estado_id);
+            return {
+                estado_id: r.estado_id,
+                estado_nome: estado?.estado_nome || 'N/A',
+                total_fazendas: r._count.fazenda_id,
+                soma_area_total: r._sum.fazenda_area_total ?? 0,
+                soma_area_agr: r._sum.fazenda_area_agr ?? 0,
+                soma_area_veg: r._sum.fazenda_area_veg ?? 0,
+            };
+        });
+    }
 }

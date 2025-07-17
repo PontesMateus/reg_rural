@@ -44,4 +44,9 @@ export class FazendaController {
         }
         return { message: 'Registro deletado com sucesso' };
     }
+
+    @Get('por-estado')
+    getFazendasPorEstado() {
+        return this.fazendaService.getFazendasPorEstado();
+    }
 }

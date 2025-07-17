@@ -44,4 +44,83 @@ export class FazendaCulturaSafraService {
         });
         return result;
     }
+
+    async getCulturasPorSafra() {
+        const relacoes = await this.prisma.fazendaCulturaSafra.findMany({
+            include: {
+                safra: true,
+                cultura: true,
+            },
+        });
+
+        const agrupado = relacoes.reduce((acc, item) => {
+            const safraId = item.safra_id;
+
+            if (!acc[safraId]) {
+                acc[safraId] = {
+                    safra_id: item.safra_id,
+                    safra_ano: item.safra.safra_ano,
+                    culturas: [],
+                };
+            }
+
+            const jaExiste = acc[safraId].culturas.some(
+                (c) => c.cultura_id === item.cultura_id
+            );
+
+            if (!jaExiste) {
+                acc[safraId].culturas.push({
+                    cultura_id: item.cultura_id,
+                    cultura_descricao: item.cultura.cultura_descricao,
+                });
+            }
+
+            return acc;
+        }, {} as Record<number, any>);
+
+        return Object.values(agrupado).sort((a, b) => b.safra_ano - a.safra_ano);
+    }
+
+    async getCulturasPorEstado() {
+        const relacoes = await this.prisma.fazendaCulturaSafra.findMany({
+            include: {
+                cultura: true,
+                fazenda: {
+                    include: {
+                        estado: true,
+                    },
+                },
+            },
+        });
+
+        const agrupado = relacoes.reduce((acc, item) => {
+            const estadoId = item.fazenda.estado.estado_id;
+
+            if (!acc[estadoId]) {
+                acc[estadoId] = {
+                    estado_id: estadoId,
+                    estado_nome: item.fazenda.estado.estado_nome,
+                    culturas: [],
+                };
+            }
+
+            const jaExiste = acc[estadoId].culturas.some(
+                (c) => c.cultura_id === item.cultura.cultura_id,
+            );
+
+            if (!jaExiste) {
+                acc[estadoId].culturas.push({
+                    cultura_id: item.cultura.cultura_id,
+                    cultura_descricao: item.cultura.cultura_descricao,
+                });
+            }
+
+            return acc;
+        }, {} as Record<number, any>);
+
+        return Object.values(agrupado).sort((a, b) =>
+            a.estado_nome.localeCompare(b.estado_nome),
+        );
+    }
+
 }

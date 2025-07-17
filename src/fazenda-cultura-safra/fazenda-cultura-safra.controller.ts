@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, NotFoundException, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, UseGuards } from '@nestjs/common';
 import { FazendaCulturaSafraService } from './fazenda-cultura-safra.service';
 import { fazendaCulturaSafraDto } from './dto/fazenda-cultura-safra.dto';
 import { JwtGuard } from '../../src/auth/guard';
@@ -12,19 +12,32 @@ export class FazendaCulturaSafraController {
     async novaFazenda(@Body() dto: fazendaCulturaSafraDto) {
         return await this.fazendaCulturaSafraService.novoFazendaCulturaSafra(dto);
     }
-        @Delete(':fazenda_id/:cultura_id/:safra_id')
-        async delete(
-            @Param('fazenda_id') fazendaId: string, 
-            @Param('cultura_id') culturaId: string, 
-            @Param('safra_id') safraId: string ) {
-            const fazendaIdInt = parseInt(fazendaId, 10);
-            const culturaIdInt = parseInt(culturaId, 10);
-            const safraIdInt = parseInt(safraId, 10);
 
-            const deleted = await this.fazendaCulturaSafraService.deleteFazendaCulturaSafra(fazendaIdInt, culturaIdInt, safraIdInt);
-            if (!deleted) {
-                throw new NotFoundException('Registro não encontrado');
-            }
-            return { message: 'Registro deletado com sucesso' };
+    @Delete(':fazenda_id/:cultura_id/:safra_id')
+    async delete(
+        @Param('fazenda_id') fazendaId: string,
+        @Param('cultura_id') culturaId: string,
+        @Param('safra_id') safraId: string) {
+        const fazendaIdInt = parseInt(fazendaId, 10);
+        const culturaIdInt = parseInt(culturaId, 10);
+        const safraIdInt = parseInt(safraId, 10);
+
+        const deleted = await this.fazendaCulturaSafraService.deleteFazendaCulturaSafra(fazendaIdInt, culturaIdInt, safraIdInt);
+        if (!deleted) {
+            throw new NotFoundException('Registro não encontrado');
         }
+        return { message: 'Registro deletado com sucesso' };
+    }
+
+    @Get('culturas-por-safra')
+    getCulturasPorSafra() {
+        return this.fazendaCulturaSafraService.getCulturasPorSafra();
+    }
+
+
+
+    @Get('culturas-por-estado')
+    getCulturasPorEstado() {
+        return this.fazendaCulturaSafraService.getCulturasPorEstado();
+    }
 }
