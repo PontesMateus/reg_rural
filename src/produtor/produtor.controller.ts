@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ProdutorService } from './produtor.service';
 import { ProdutorDto } from './dto/produtor.dto';
 import { EditProdutorDto } from './dto';
+import { JwtGuard } from '../../src/auth/guard';
 
+@UseGuards(JwtGuard)
 @Controller('produtor')
 export class ProdutorController {
     constructor(private produtorService: ProdutorService) { }

@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { editFazendaDto, fazendaDto } from './dto';
 import { FazendaService } from './fazenda.service';
+import { JwtGuard } from '../../src/auth/guard';
 
+@UseGuards(JwtGuard)
 @Controller('fazenda')
 export class FazendaController {
     constructor(private fazendaService: FazendaService) { }
@@ -20,6 +22,10 @@ export class FazendaController {
     async listFazendaPorProdutor(@Param('produtor_id') produtorId: string) {
         const id = parseInt(produtorId, 10);
         return await this.fazendaService.listFazendaPorProdutor(id);
+    }
+    @Get('resumo')
+    async getResumoFazendas() {
+        return this.fazendaService.getResumoFazendas();
     }
 
     @Patch(':fazenda_id')

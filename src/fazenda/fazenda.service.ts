@@ -94,4 +94,23 @@ export class FazendaService {
         });
         return fazenda;
     }
+
+    async getResumoFazendas() {
+        const totalFazendas = await this.prisma.fazenda.count();
+
+        const somaAreaTotalObj = await this.prisma.fazenda.aggregate({
+            _sum: {
+                fazenda_area_total: true,
+                fazenda_area_agr: true,
+                fazenda_area_veg: true,
+            },
+        });
+
+        return {
+            total_fazendas: totalFazendas,
+            soma_area_total: Number(somaAreaTotalObj._sum.fazenda_area_total ?? 0),
+            soma_area_agr: Number(somaAreaTotalObj._sum.fazenda_area_agr ?? 0),
+            soma_area_veg: Number(somaAreaTotalObj._sum.fazenda_area_veg ?? 0),
+        };
+    }
 }

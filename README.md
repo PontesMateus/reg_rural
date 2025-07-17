@@ -26,13 +26,17 @@ npm run db:dev:restart
 # ou
 yarn db:dev:restart
 ```
-## 4. Iniciar a aplicação
+## 4. Popular o banco com dados (opcional)
+```bash
+npx prisma db seed
+```
+## 5. Iniciar a aplicação
 ```bash
 npm run start:dev
 # ou
 yarn start:dev
 ```
-## 5. Rodar os testes
+## 6. Rodar os testes
 ```bash
 npm run test:e2e
 # ou

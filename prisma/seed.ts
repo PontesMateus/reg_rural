@@ -33,17 +33,17 @@ const estados = [
 ];
 
 const culturas = [
-    { cultura_id: 1, cultura_descricao: 'Café' },
-    { cultura_id: 2, cultura_descricao: 'Milho' },
-    { cultura_id: 3, cultura_descricao: 'Soja' },
-    { cultura_id: 4, cultura_descricao: 'Morango' },
+    { cultura_descricao: 'Café' },
+    { cultura_descricao: 'Milho' },
+    { cultura_descricao: 'Soja' },
+    { cultura_descricao: 'Morango' },
 ]
 
 const safras = [
-    { safra_id: 1, safra_ano: 2022 },
-    { safra_id: 2, safra_ano: 2023 },
-    { safra_id: 3, safra_ano: 2024 },
-    { safra_id: 4, safra_ano: 2025 },
+    { safra_ano: 2022 },
+    { safra_ano: 2023 },
+    { safra_ano: 2024 },
+    { safra_ano: 2025 },
 ]
 
 const cidades = [
@@ -56,13 +56,12 @@ const cidades = [
 ];
 
 const produtores = [
-    { produtor_id: 1, produtor_nome: 'Luiz Augusto Monteiro', produtor_cpf: '65295006697', estado_id: 31, cidade_id: 3118601 },
-    { produtor_id: 2, produtor_nome: 'Silvana Luna Flávia Oliveira', produtor_cpf: '33361289602', estado_id: 41, cidade_id: 4125506 },
+    { produtor_nome: 'Luiz Augusto Monteiro', produtor_cpf: '65295006697', estado_id: 31, cidade_id: 3118601 },
+    { produtor_nome: 'Silvana Luna Flávia Oliveira', produtor_cpf: '33361289602', estado_id: 41, cidade_id: 4125506 },
 ]
 
 const fazendas = [
     {
-        fazenda_id: 1,
         produtor_id: 1,
         estado_id: 31,
         cidade_id: 3118601,
@@ -72,7 +71,6 @@ const fazendas = [
         fazenda_area_veg: 40
     },
     {
-        fazenda_id: 2,
         produtor_id: 1,
         estado_id: 31,
         cidade_id: 3137007,
@@ -82,7 +80,6 @@ const fazendas = [
         fazenda_area_veg: 60
     },
     {
-        fazenda_id: 3,
         produtor_id: 1,
         estado_id: 31,
         cidade_id: 3137007,
@@ -92,7 +89,6 @@ const fazendas = [
         fazenda_area_veg: 60
     },
     {
-        fazenda_id: 4,
         produtor_id: 1,
         estado_id: 41,
         cidade_id: 4125506,
@@ -102,7 +98,6 @@ const fazendas = [
         fazenda_area_veg: 80
     },
     {
-        fazenda_id: 5,
         produtor_id: 1,
         estado_id: 41,
         cidade_id: 4106902,
@@ -128,61 +123,34 @@ const culturaFazendaSafras = [
 
 
 async function main() {
-    for (const estado of estados) {
-        await prisma.estado.upsert({
-            where: { estado_id: estado.estado_id },
-            update: {},
-            create: estado,
-        });
-    }
-    for (const cidade of cidades) {
-        await prisma.cidade.upsert({
-            where: { cidade_id: cidade.cidade_id },
-            update: {},
-            create: cidade,
-        });
-    }
-    for (const cultura of culturas) {
-        await prisma.cultura.upsert({
-            where: { cultura_id: cultura.cultura_id },
-            update: {},
-            create: cultura,
-        })
-    }
-    for (const safra of safras) {
-        await prisma.safra.upsert({
-            where: { safra_id: safra.safra_id },
-            update: {},
-            create: safra,
-        })
-    }
-    for (const produtor of produtores) {
-        await prisma.produtor.upsert({
-            where: { produtor_id: produtor.produtor_id },
-            update: {},
-            create: produtor,
-        })
-    }
-    for (const fazenda of fazendas) {
-        await prisma.fazenda.upsert({
-            where: { fazenda_id: fazenda.fazenda_id },
-            update: {},
-            create: fazenda,
-        })
-    }
-    for (const culturaFazendaSafra of culturaFazendaSafras) {
-        await prisma.fazendaCulturaSafra.upsert({
-            where: {
-                fazenda_id_cultura_id_safra_id: {
-                    fazenda_id: culturaFazendaSafra.fazenda_id,
-                    cultura_id: culturaFazendaSafra.cultura_id,
-                    safra_id: culturaFazendaSafra.safra_id,
-                },
-            },
-            update: {},
-            create: culturaFazendaSafra,
-        })
-    }
+    await prisma.estado.createMany({
+        data: [...estados],
+        skipDuplicates: true,
+    });
+    await prisma.cidade.createMany({
+        data: [...cidades],
+        skipDuplicates: true,
+    });
+    await prisma.cultura.createMany({
+        data: [...culturas],
+        skipDuplicates: true,
+    })
+    await prisma.safra.createMany({
+        data: [...safras],
+        skipDuplicates: true,
+    })
+    await prisma.produtor.createMany({
+        data: [...produtores],
+        skipDuplicates: true,
+    })
+    await prisma.fazenda.createMany({
+        data: [...fazendas],
+        skipDuplicates: true,
+    });
+    await prisma.fazendaCulturaSafra.createMany({
+        data: [...culturaFazendaSafras],
+        skipDuplicates: true,
+    })
 }
 
 main()

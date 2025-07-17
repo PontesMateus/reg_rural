@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, NotFoundException, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, NotFoundException, Param, Post, UseGuards } from '@nestjs/common';
 import { FazendaCulturaSafraService } from './fazenda-cultura-safra.service';
 import { fazendaCulturaSafraDto } from './dto/fazenda-cultura-safra.dto';
+import { JwtGuard } from '../../src/auth/guard';
 
+@UseGuards(JwtGuard)
 @Controller('fazenda-cultura-safra')
 export class FazendaCulturaSafraController {
     constructor(private fazendaCulturaSafraService: FazendaCulturaSafraService) { }

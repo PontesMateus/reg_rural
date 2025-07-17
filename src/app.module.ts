@@ -9,6 +9,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ProdutorModule } from './produtor/produtor.module';
 import { FazendaModule } from './fazenda/fazenda.module';
 import { FazendaCulturaSafraModule } from './fazenda-cultura-safra/fazenda-cultura-safra.module';
+import { CidadeModule } from './cidade/cidade.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +23,7 @@ import { FazendaCulturaSafraModule } from './fazenda-cultura-safra/fazenda-cultu
     ProdutorModule,
     FazendaModule,
     FazendaCulturaSafraModule,
+    CidadeModule,
   ],
 })
 export class AppModule { }
