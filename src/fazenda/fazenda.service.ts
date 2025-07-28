@@ -2,6 +2,7 @@ import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/com
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { editFazendaDto, fazendaDto } from './dto';
 import { Fazenda } from '@prisma/client';
+import { ErrorMessages } from '../../common/constants/error-messages.constant';
 
 @Injectable()
 export class FazendaService {
@@ -10,9 +11,7 @@ export class FazendaService {
     async novaFazenda(dto: fazendaDto) {
         const somaArea = dto.fazenda_area_agr + dto.fazenda_area_veg;
         if (dto.fazenda_area_total < somaArea) {
-            throw new BadRequestException(
-                'A área total não pode ser menor que a soma das áreas agrícola e de vegetação.',
-            );
+            throw new BadRequestException(ErrorMessages.FAZENDA.VALIDA_AREA);
         }
         try {
             const fazenda = await this.prisma.fazenda.create({
@@ -21,9 +20,7 @@ export class FazendaService {
             return fazenda;
         } catch (e) {
             console.log(e);
-            throw new ForbiddenException(
-                'Houve um problema com a requisição, tente novamente mais tarde.',
-            );
+            throw new ForbiddenException(ErrorMessages.GERAL.ERRO_PADRAO);
         }
     }
 
@@ -58,16 +55,14 @@ export class FazendaService {
                 dto.fazenda_area_veg === undefined
             ) {
                 throw new BadRequestException(
-                    'Se for atualizar qualquer área, as três áreas (total, agrícola e vegetação) devem ser informadas.',
+                    ErrorMessages.FAZENDA.VALIDA_ATUALIZA_AREA,
                 );
             }
 
             const somaArea = dto.fazenda_area_agr + dto.fazenda_area_veg;
 
             if (dto.fazenda_area_total < somaArea) {
-                throw new BadRequestException(
-                    'A área total não pode ser menor que a soma das áreas agrícola e de vegetação.',
-                );
+                throw new BadRequestException(ErrorMessages.FAZENDA.VALIDA_AREA);
             }
         }
 

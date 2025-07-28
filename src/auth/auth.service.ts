@@ -5,6 +5,7 @@ import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { ErrorMessages } from '../../common/constants/error-messages.constant';
 
 @Injectable()
 export class AuthService {
@@ -23,12 +24,10 @@ export class AuthService {
       if (e instanceof PrismaClientKnownRequestError) {
         if (e.code === 'P2002') {
           //! Tratativa duplicate key
-          throw new ForbiddenException('E-mail já cadastrado');
+          throw new ForbiddenException(ErrorMessages.USUARIO.EMAIL_CADASTRADO);
         } else {
           console.log(e);
-          throw new ForbiddenException(
-            'Houve um problema com a requisição, tente novamente mais tarde.',
-          );
+          throw new ForbiddenException(ErrorMessages.GERAL.ERRO_PADRAO);
         }
       }
     }
@@ -41,13 +40,13 @@ export class AuthService {
       },
     });
     if (!usuario) {
-      throw new ForbiddenException('Credenciais inválidas.');
+      throw new ForbiddenException(ErrorMessages.USUARIO.NAO_ENCONTRADO);
     }
 
     const senhaCorreta = await argon.verify(usuario.hash, dto.usuario_senha);
 
     if (!senhaCorreta) {
-      throw new ForbiddenException('Credenciais inválidas.');
+      throw new ForbiddenException(ErrorMessages.AUTH.CREDENCIAIS_INVALIDAS);
     }
     return this.signToken(usuario.usuario_id, usuario.email);
 

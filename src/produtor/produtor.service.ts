@@ -4,6 +4,7 @@ import { ProdutorDto } from './dto/produtor.dto';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { Produtor } from '@prisma/client';
 import { EditProdutorDto } from './dto';
+import { ErrorMessages } from '../../common/constants/error-messages.constant';
 
 @Injectable()
 export class ProdutorService {
@@ -19,11 +20,11 @@ export class ProdutorService {
                 }
             });
             if (cpfExiste) {
-                throw new ForbiddenException('CPF já cadastrado');
+                throw new ForbiddenException(ErrorMessages.PRODUTOR.CPF_CADASTRADO);
             }
             validaCpf = cpf.isValid(dto.produtor_cpf)
             if (!validaCpf) {
-                throw new ForbiddenException('O CPF Informado é inválido.');
+                throw new ForbiddenException(ErrorMessages.PRODUTOR.CPF_INVALIDO);
             }
 
         }
@@ -34,16 +35,16 @@ export class ProdutorService {
                 }
             });
             if (cnpjExiste) {
-                throw new ForbiddenException('CNPJ já cadastrado');
+                throw new ForbiddenException(ErrorMessages.PRODUTOR.CNPJ_CADASTRADO);
             }
             validaCnpj = cnpj.isValid(dto.produtor_cnpj);
             if (!validaCnpj) {
-                throw new ForbiddenException('O CNPJ Informado é inválido.');
+                throw new ForbiddenException(ErrorMessages.PRODUTOR.CNPJ_INVALIDO);
             }
         }
 
         if (!validaCpf && !validaCnpj) {
-            throw new ForbiddenException('Para cadastrar um produtor é necessário o mínimo de um documento válido (CPF e/ou CNPJ).');
+            throw new ForbiddenException(ErrorMessages.PRODUTOR.DOCUMENTO_REQUERIDO);
         }
         try {
             const produtor = await this.prisma.produtor.create({
@@ -53,7 +54,7 @@ export class ProdutorService {
         } catch (e) {
             console.log(e);
             throw new ForbiddenException(
-                'Houve um problema com a requisição, tente novamente mais tarde.',
+                ErrorMessages.GERAL.ERRO_PADRAO
             );
         }
     }
@@ -77,10 +78,10 @@ export class ProdutorService {
                 }
             });
             if (cpfExiste) {
-                throw new ForbiddenException('CPF já cadastrado');
+                throw new ForbiddenException(ErrorMessages.PRODUTOR.CPF_CADASTRADO);
             }
             if (!cpf.isValid(dto.produtor_cpf)) {
-                throw new ForbiddenException('O CPF Informado é inválido.');
+                throw new ForbiddenException(ErrorMessages.PRODUTOR.CPF_INVALIDO);
             }
 
         }
@@ -94,10 +95,10 @@ export class ProdutorService {
                 }
             });
             if (cnpjExiste) {
-                throw new ForbiddenException('CNPJ já cadastrado');
+                throw new ForbiddenException(ErrorMessages.PRODUTOR.CNPJ_CADASTRADO);
             }
             if (!cnpj.isValid(dto.produtor_cnpj)) {
-                throw new ForbiddenException('O CNPJ Informado é inválido.');
+                throw new ForbiddenException(ErrorMessages.PRODUTOR.CNPJ_INVALIDO);
             }
         }
 

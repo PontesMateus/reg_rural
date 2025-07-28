@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { fazendaCulturaSafraDto } from './dto/fazenda-cultura-safra.dto';
+import { ErrorMessages } from '../../common/constants/error-messages.constant';
 
 @Injectable()
 export class FazendaCulturaSafraService {
@@ -14,9 +15,7 @@ export class FazendaCulturaSafraService {
             return response;
         } catch (e) {
             console.log(e);
-            throw new ForbiddenException(
-                'Houve um problema com a requisição, tente novamente mais tarde.',
-            );
+            throw new ForbiddenException(ErrorMessages.GERAL.ERRO_PADRAO);
         }
     }
 
